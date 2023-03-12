@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { API } from "@aws-amplify/api"
+import { intersectionList } from "./graphql/queries.ts";
 
-import { aws_settings } from "./aws-exports.js"
-import APIAddressEntryComponent from "./APIAddressEntry.js";
+import aws_settings from "./aws-exports.js"
+
 import AddIntersectionButton from "./AddIntersectionButton.js";
 import { IntersectionComponent } from "./Intersection.js";
 
@@ -11,45 +12,23 @@ class DashboardComponent extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { intersections: [], connected: false };
-    
-        this.connect = this.connect.bind(this);
-        this.userSelectLight = this.userSelectLight.bind(this);
+        this.state = { intersections: [] };
     }
 
-    connect(url) {
-        console.log(`Connecting to URL ${url}`);
-    }
+    componentDidMount() {
+        API.configure(aws_settings);
 
-    userSelectLight(intersection_index, light, value) {
-        let intersection = this.state.intersections[intersection_index];
-
-        // Really simple business logic to disallow invalid states (ie. both lights green)
-        let light1_new = intersection.light1;
-        let light2_new = intersection.light2;
-
-        if (light === "1") {
-            light1_new = value;
-            if (value !== "red" && intersection.light2 !== "red") {
-                light2_new = "red";
-            }
-        }
-        else {
-            light2_new = value;
-            if (value !== "red" && intersection.light1 !== "red") {
-                light1_new = "red";
-            }
-        }
-        let new_state = this.state.intersections;
-        new_state[intersection_index].light1 = light1_new;
-        new_state[intersection_index].light2 = light2_new;
-
-        this.setState({ intersections: new_state });
+        API.graphql( {
+            query: intersectionList
+        }).then((result) => {
+            console.log(result.data.intersectionList);
+            this.setState({ intersections: result.data.intersectionList });
+        }).catch((error) => {
+            console.error(error);
+        });
     }
 
     render() {
-        let connectionStatus = this.state.connected ? "Connected" : "Disconnected";
-
         let intersectionComponents = [];
 
         let j = 0;
@@ -57,16 +36,14 @@ class DashboardComponent extends React.Component {
             intersectionComponents.push(<IntersectionComponent 
                     key={j} id={j}
                     intersection={i} 
-                    onClick={this.userSelectLight} />);
+                    />);
             j++;
         }
 
         return (
             <div className="dashboard-container" >
                 <div id="top-bar" >
-                    <APIAddressEntryComponent connectCallback={this.connect} 
-                    defaultURL={this.props.defaultAPI}/>
-                    <span className="connect-status" >{connectionStatus}</span>
+                    Top Bar
                 </div>
     
                 <div className="traffic-light-control-group" >
@@ -74,7 +51,7 @@ class DashboardComponent extends React.Component {
                 </div>
 
                 <div className="debug-group" >
-                    <AddIntersectionButton connection_template={this.connection} />
+                    <AddIntersectionButton api={this.api} />
                 </div> 
             </div>
         );
