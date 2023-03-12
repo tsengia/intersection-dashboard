@@ -1,0 +1,27 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Intersection {
+  ble_state: String!
+  light1: String!
+  light2: String!
+  name: String!
+}
+
+type Mutation {
+  #  Returns the new Intersection
+  addIntersection(name: String!): Intersection
+  #  Returns the name of the deleted intersection
+  removeIntersection(name: String!): Intersection
+  #  Returns the updated Intersection
+  updateIntersection(ble_state: String, light1: String, light2: String, name: String!): Intersection
+}
+
+type Query {
+  #  Returns the specified Intersection
+  intersection(name: String!): Intersection
+  #  Returns a list of Intersections
+  intersectionList: [Intersection]
+}
