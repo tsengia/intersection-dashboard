@@ -5,7 +5,15 @@ The backend is powered by AWS AppSync and DynamoDB.
 This frontend app was originally built for a [previous IoT project of mine](https://github.com/tsengia/iot-thingy91-traffic-lights) and has now been refactored to use AWS.
 
 ## Development
-To launch the development server, run the following command from this directory: `npm run start`
+Before developing, you will need to install the required node modules, run the following command to install them:
+```bash
+npm ci
+```
+
+To launch the development server, run the following command from this directory: 
+```
+npm start
+```
 
 ## Deployment
 To build a deployment version of this app, run this command: `npm run build`.

@@ -21,14 +21,14 @@ body {
   margin-bottom: 30px;
 }
 
-.cse-input {
+.api-input {
   display: inline-block;
   float: left;
   margin-left: 5px;
   width: 80%;
 }
 
-.cse-input input[type=text] {
+.api-input input[type=text] {
     background-color: black;
     color: white;
     font-family: monospace;
