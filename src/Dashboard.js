@@ -64,14 +64,17 @@ class DashboardComponent extends React.Component {
             // Handle case when user cancels out of input prompt
             return;
         }
+        // Trim whitespace from ends, this is done on server side too
+        name = name.trim();
         API.graphql({
             query: addIntersection,
             variables: {
                 "name": name
             }
-        }).then((result) => {
-            if (result.data.addIntersection != null) {
-                const new_intersection = result.data.addIntersection;
+        }).then((response) => {
+            if (response.data.addIntersection != null) {
+                // Add the intersection model to our new state
+                const new_intersection = response.data.addIntersection;
                 let i = this.state.intersections;
                 i[new_intersection.name] = new_intersection;
                 this.setState({ 
@@ -81,8 +84,10 @@ class DashboardComponent extends React.Component {
             else {
                 console.error("data.addIntersection returned null!");
             }
-        }).catch((error) => {
-            console.error(error);
+        }).catch((response) => {
+            if (response.errors) {
+                console.error(response.errors);
+            }
         });
     }
 

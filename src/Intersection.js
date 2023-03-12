@@ -42,7 +42,7 @@ export class IntersectionComponent extends React.Component {
         API.graphql({
             query: updateIntersection,
             variables: {
-                name: this.state.name,
+                name: this.props.name,
                 light1: new_light1,
                 light2: new_light2,
                 ble_state: this.state.ble_state
