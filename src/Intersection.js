@@ -2,7 +2,7 @@ import React from 'react';
 import TrafficLightComponent from "./TrafficLight.js";
 
 import { API } from "@aws-amplify/api";
-import { updateIntersection } from './graphql/mutations.ts';
+import { removeIntersection, updateIntersection } from './graphql/mutations.ts';
 
 export class IntersectionComponent extends React.Component {
 
@@ -10,10 +10,30 @@ export class IntersectionComponent extends React.Component {
         super(props);
         this.state = {};
         this.lightClickHandler = this.lightClickHandler.bind(this);   
+        this.deleteClickHandler = this.deleteClickHandler.bind(this);   
     }
 
     componentDidMount() {
-        this.setState(this.props.intersection);
+        this.setState(this.props);
+    }
+
+    deleteClickHandler() {
+        API.graphql({
+            query: removeIntersection,
+            variables: {
+                name: this.state.name
+            }
+        }).then((response) => {
+            let removed_model = response.data.removeIntersection;
+            if (removed_model !== null) {
+                this.props.deleteCallback(this);
+            }
+            else {
+                console.error("response.data.deleteIntersection is null!");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
     }
 
     lightClickHandler(light, value) {
@@ -70,6 +90,7 @@ export class IntersectionComponent extends React.Component {
         return (
             <div className="intersection-container" >
                 <div className="intersection-id" >{this.state.name}</div>
+                <button className="delete-button" type='button' onClick={this.deleteClickHandler} >X</button>
                 <div>Bluetooth: <span className={ble_state} >{ble_state}</span></div>
                 <TrafficLightComponent lightvalues={light1_values} 
                                         name="1" onClick={this.lightClickHandler} key="1" />
