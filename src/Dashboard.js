@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+import { aws_settings } from "./aws-exports.js"
 import APIAddressEntryComponent from "./APIAddressEntry.js";
 import AddIntersectionButton from "./AddIntersectionButton.js";
 import { IntersectionComponent } from "./Intersection.js";
@@ -27,15 +28,15 @@ class DashboardComponent extends React.Component {
         let light1_new = intersection.light1;
         let light2_new = intersection.light2;
 
-        if (light == "1") {
+        if (light === "1") {
             light1_new = value;
-            if (value != "red" && intersection.light2 != "red") {
+            if (value !== "red" && intersection.light2 !== "red") {
                 light2_new = "red";
             }
         }
         else {
             light2_new = value;
-            if (value != "red" && intersection.light1 != "red") {
+            if (value !== "red" && intersection.light1 !== "red") {
                 light1_new = "red";
             }
         }
