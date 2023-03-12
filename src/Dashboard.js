@@ -1,10 +1,10 @@
 import React from "react";
 import { API } from "@aws-amplify/api"
 import { intersectionList } from "./graphql/queries.ts";
+import { addIntersection, removeIntersection } from './graphql/mutations.ts';
 
 import aws_settings from "./aws-exports.js"
 
-import AddIntersectionButton from "./AddIntersectionButton.js";
 import { IntersectionComponent } from "./Intersection.js";
 
 class DashboardComponent extends React.Component {
@@ -14,7 +14,8 @@ class DashboardComponent extends React.Component {
 
         this.state = { intersections: [] };
 
-        this.deleteIntersection = this.deleteIntersection.bind(this);
+        this.deleteIntersectionHandler = this.deleteIntersectionHandler.bind(this);
+        this.addIntersectionHandler = this.addIntersectionHandler.bind(this);
     }
 
     componentDidMount() {
@@ -34,9 +35,55 @@ class DashboardComponent extends React.Component {
         });
     }
 
-    deleteIntersection(intersectionComponent) {
-        console.log(intersectionComponent.state.name);
+    deleteIntersectionHandler(name) {
+        const deleted_name = name;
 
+        API.graphql({
+            query: removeIntersection,
+            variables: {
+                name: deleted_name
+            }
+        }).then((response) => {
+            let removed_model = response.data.removeIntersection;
+            if (removed_model !== null && deleted_name === removed_model.name) {
+                let i = this.state.intersections;
+                delete i[deleted_name];
+                this.setState({intersections: i});
+            }
+            else {
+                console.error("response.data.deleteIntersection is null!");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+
+    addIntersectionHandler() {
+        let name = prompt("New Intersection Name:");
+        if (name === "") {
+            // Handle case when user cancels out of input prompt
+            return;
+        }
+        API.graphql({
+            query: addIntersection,
+            variables: {
+                "name": name
+            }
+        }).then((result) => {
+            if (result.data.addIntersection != null) {
+                const new_intersection = result.data.addIntersection;
+                let i = this.state.intersections;
+                i[new_intersection.name] = new_intersection;
+                this.setState({ 
+                    intersections: i
+                });
+            }
+            else {
+                console.error("data.addIntersection returned null!");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
     }
 
     render() {
@@ -46,7 +93,7 @@ class DashboardComponent extends React.Component {
         for (let i of Object.keys(this.state.intersections)) {
             intersectionComponents.push(<IntersectionComponent 
                     key={j} id={j}
-                    deleteCallback={this.deleteIntersection}
+                    deleteCallback={this.deleteIntersectionHandler}
                     {...this.state.intersections[i]} 
                     />);
             j++;
@@ -55,7 +102,7 @@ class DashboardComponent extends React.Component {
         return (
             <div className="dashboard-container" >
                 <div id="top-bar" >
-                    Top Bar
+                    Traffic Intersection Dashboard
                 </div>
     
                 <div className="traffic-light-control-group" >
@@ -63,7 +110,7 @@ class DashboardComponent extends React.Component {
                 </div>
 
                 <div className="debug-group" >
-                    <AddIntersectionButton api={this.api} />
+                    <button type="button" onClick={this.addIntersectionHandler} >+</button>
                 </div> 
             </div>
         );

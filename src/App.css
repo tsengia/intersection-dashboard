@@ -68,6 +68,16 @@ body {
     font-family: monospace;
     font-size: 1.0em;
     color: white;
+    display: inline-block;
+}
+
+.intersection-container .delete-button {
+    color: #F00;
+    font-family: sans-serif;
+    font-size: 1em;
+    font-weight: bold;
+    display: inline-block;
+    float: right;
 }
 
 .connected {
