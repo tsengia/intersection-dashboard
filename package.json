@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aws-amplify/api": "^5.0.18",
     "@aws-amplify/cli": "^10.8.1",
     "@aws-sdk/client-appsync": "^3.289.0",
     "@testing-library/jest-dom": "^5.16.5",
