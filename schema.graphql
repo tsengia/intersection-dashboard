@@ -1,6 +1,7 @@
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
 
 type Intersection {
@@ -24,4 +25,10 @@ type Query {
   intersection(name: String!): Intersection
   #  Returns a list of Intersections
   intersectionList: [Intersection]
+}
+
+type Subscription {
+  addedIntersection: Intersection @aws_subscribe(mutations : ["addIntersection"])
+  removedIntersection: Intersection @aws_subscribe(mutations : ["removeIntersection"])
+  updatedIntersection(name: String): Intersection @aws_subscribe(mutations : ["updateIntersection"])
 }

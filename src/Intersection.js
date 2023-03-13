@@ -1,8 +1,9 @@
 import React from 'react';
 import TrafficLightComponent from "./TrafficLight.js";
 
-import { API } from "@aws-amplify/api";
+import { API, graphqlOperation } from "@aws-amplify/api";
 import { updateIntersection } from './graphql/mutations.ts';
+import { updatedIntersection } from "./graphql/subscriptions.ts";
 
 export class IntersectionComponent extends React.Component {
 
@@ -15,6 +16,21 @@ export class IntersectionComponent extends React.Component {
 
     componentDidMount() {
         this.setState(this.props);
+
+        this.updateSubscription = API.graphql({
+            query: updatedIntersection,
+            variables: {
+                "name": this.props.name
+            }
+        }).subscribe({
+            next: (response) => {
+                this.setState(response.value.data.updatedIntersection);
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        this.updateSubscription.unsubscribe();
     }
 
     deleteClickHandler() {

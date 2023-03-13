@@ -78,3 +78,37 @@ export type IntersectionListQuery = {
     name: string,
   } | null > | null,
 };
+
+export type AddedIntersectionSubscription = {
+  addedIntersection?:  {
+    __typename: "Intersection",
+    ble_state: string,
+    light1: string,
+    light2: string,
+    name: string,
+  } | null,
+};
+
+export type RemovedIntersectionSubscription = {
+  removedIntersection?:  {
+    __typename: "Intersection",
+    ble_state: string,
+    light1: string,
+    light2: string,
+    name: string,
+  } | null,
+};
+
+export type UpdatedIntersectionSubscriptionVariables = {
+  name?: string | null,
+};
+
+export type UpdatedIntersectionSubscription = {
+  updatedIntersection?:  {
+    __typename: "Intersection",
+    ble_state: string,
+    light1: string,
+    light2: string,
+    name: string,
+  } | null,
+};
