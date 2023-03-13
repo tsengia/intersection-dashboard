@@ -6,7 +6,7 @@ import { intersectionList } from "./graphql/queries.ts";
 import { addIntersection, removeIntersection } from './graphql/mutations.ts';
 import { addedIntersection, removedIntersection } from "./graphql/subscriptions.ts";
 
-import aws_settings from "./aws-exports.js"
+import aws_settings from "./aws-exports.js";
 
 import { IntersectionComponent } from "./Intersection.js";
 
