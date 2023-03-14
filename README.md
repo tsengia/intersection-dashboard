@@ -4,6 +4,8 @@ The backend is powered by AWS AppSync and DynamoDB.
 
 This frontend app was originally built for a [previous IoT project of mine](https://github.com/tsengia/iot-thingy91-traffic-lights) and has now been refactored to use AWS.
 
+__[Try it out here!](https://main.d357xgwrfyl7b5.amplifyapp.com/)__
+
 ## Development
 Before developing, you will need to install the required node modules, run the following command to install them:
 ```bash
