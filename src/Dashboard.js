@@ -3,8 +3,8 @@ import { API, graphqlOperation } from "@aws-amplify/api"
 import { Hub } from "@aws-amplify/core"
 import { CONNECTION_STATE_CHANGE, ConnectionState } from "@aws-amplify/pubsub"
 import { intersectionList } from "./graphql/queries.ts";
-import { addIntersection, removeIntersection } from './graphql/mutations.ts';
-import { addedIntersection, removedIntersection } from "./graphql/subscriptions.ts";
+import { addIntersection, updateIntersection, removeIntersection } from './graphql/mutations.ts';
+import { addedIntersection, updatedIntersection, removedIntersection } from "./graphql/subscriptions.ts";
 
 import aws_settings from "./aws-exports.js";
 
@@ -20,6 +20,7 @@ class DashboardComponent extends React.Component {
         this.priorConnectionState = ConnectionState.Disconnected;
         this.subscriptions = [];
 
+        this.updateIntersectionAction = this.updateIntersectionAction.bind(this);
         this.deleteIntersectionAction = this.deleteIntersectionAction.bind(this);
         this.addIntersectionAction = this.addIntersectionAction.bind(this);
         this.fetchIntersections = this.fetchIntersections.bind(this);
@@ -75,9 +76,29 @@ class DashboardComponent extends React.Component {
                 next: processAddNotification
             })
         );
+
+        // Subscription for updated intersections
+        let processUpdateNotification = (response) => {
+            const new_intersection = response.value.data.updatedIntersection;
+            let i = this.state.intersections;
+            i[new_intersection.name] = new_intersection;
+            this.setState({ 
+                intersections: i
+            });
+        };
+        processUpdateNotification = processUpdateNotification.bind(this);
+
+        this.subscriptions.push(
+            API.graphql(
+                graphqlOperation(updatedIntersection)
+            ).subscribe({
+                next: processUpdateNotification
+            })
+        );
     }
 
     componentWillUnmount() {
+        // Unsubscribe from all of our subscriptions
         for (let s of this.subscriptions) {
             s.unsubscribe();
         }
@@ -92,6 +113,31 @@ class DashboardComponent extends React.Component {
                 intersection_name_map[i.name] = i;
             }
             this.setState({ intersections: intersection_name_map });
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+
+    updateIntersectionAction(name, light1, light2, ble_state) {
+        // Send a mutation request to update the light state
+        API.graphql({
+            query: updateIntersection,
+            variables: {
+                name: name,
+                light1: light1,
+                light2: light2,
+                ble_state: ble_state
+            }
+        }).then((response) => {
+            let new_model = response.data.updateIntersection;
+            if (new_model !== null) {
+                let i = this.state.intersections;
+                i[name] = new_model
+                this.setState(i);
+            }
+            else {
+                console.error("response.data.updateIntersection is null!");
+            }
         }).catch((error) => {
             console.error(error);
         });
@@ -163,6 +209,7 @@ class DashboardComponent extends React.Component {
             intersectionComponents.push(<IntersectionComponent 
                     key={j} id={j}
                     deleteCallback={this.deleteIntersectionAction}
+                    updateCallback={this.updateIntersectionAction}
                     {...this.state.intersections[i]} 
                     />);
             j++;
