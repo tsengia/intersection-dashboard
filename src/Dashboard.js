@@ -15,7 +15,7 @@ class DashboardComponent extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { intersections: [] };
+        this.state = { intersections: [], status: "Connecting to AppSync server..." };
 
         this.priorConnectionState = ConnectionState.Disconnected;
         this.subscriptions = [];
@@ -64,7 +64,7 @@ class DashboardComponent extends React.Component {
             let i = this.state.intersections;
             i[new_intersection.name] = new_intersection;
             this.setState({ 
-                intersections: i
+                intersections: i,
             });
         };
         processAddNotification = processAddNotification.bind(this);
@@ -112,9 +112,10 @@ class DashboardComponent extends React.Component {
             for (let i of result.data.intersectionList) {
                 intersection_name_map[i.name] = i;
             }
-            this.setState({ intersections: intersection_name_map });
+            this.setState({ intersections: intersection_name_map, status: "" });
         }).catch((error) => {
             console.error(error);
+            this.setState({"status": "ERROR: " + error});
         });
     }
 
@@ -140,6 +141,7 @@ class DashboardComponent extends React.Component {
             }
         }).catch((error) => {
             console.error(error);
+            this.setState({"status": "ERROR: " + error});
         });
     }
 
@@ -165,6 +167,7 @@ class DashboardComponent extends React.Component {
             }
         }).catch((error) => {
             console.error(error);
+            this.setState({"status": "ERROR: " + error});
         });
     }
 
@@ -193,10 +196,12 @@ class DashboardComponent extends React.Component {
             }
             else {
                 console.error("data.addIntersection returned null!");
+                this.setState({"status": "ERROR: data.addIntersection returned null!"})
             }
         }).catch((response) => {
             if (response.errors) {
                 console.error(response.errors);
+                this.setState({"status": "ERROR: " + response.errors})
             }
         });
     }
@@ -215,10 +220,20 @@ class DashboardComponent extends React.Component {
             j++;
         }
 
+        var status_box;
+        if (this.state.status.length > 0) {
+            status_box = (<div className="status-box" >{this.state.status}</div>);
+        }
+
         return (
             <div className="dashboard-container" >
                 <div id="top-bar" >
                     Traffic Intersection Dashboard
+                </div>
+
+                <div class="tutorial-blurb" >
+                    This webapp uses Web Sockets to show real time changes. <br />
+                    Open this website on another device to see it in action!<br />
                 </div>
     
                 <div className="traffic-light-control-group" >
@@ -226,8 +241,10 @@ class DashboardComponent extends React.Component {
                 </div>
 
                 <div className="debug-group" >
-                    <button type="button" onClick={this.addIntersectionAction} >+</button>
+                    <button type="button" onClick={this.addIntersectionAction} >+ Add New Intersection</button>
                 </div> 
+                <br />
+                {status_box}
             </div>
         );
     }

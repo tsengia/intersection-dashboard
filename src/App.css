@@ -21,8 +21,19 @@ body {
   margin-bottom: 30px;
 }
 
+.status-box {
+    padding: 5px;
+    font-size: 80%;
+    background-color: #000;
+    border: 3px solid #0ae;
+}
+
+.tutorial-blurb {
+    font-size: 80%;
+    font-style: italic;
+}
+
 .api-input {
-  display: inline-block;
   float: left;
   margin-left: 5px;
   width: 80%;
