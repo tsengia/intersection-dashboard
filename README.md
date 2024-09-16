@@ -2,7 +2,7 @@
 This is a simple React JS single page application (SPA) for controlling virtual Traffic Intersections.  
 The backend is powered by AWS AppSync and DynamoDB.  
 
-This frontend app was originally built for a [previous IoT project of mine](https://github.com/tsengia/iot-thingy91-traffic-lights) and has now been refactored to use AWS.
+This frontend app was originally built for a [previous IoT project of mine](https://github.com/tsengia/iot-thingy91-traffic-lights) and has now been refactored to use AWS AppSync instead of oneM2M.
 
 __[Try it out here!](https://main.d357xgwrfyl7b5.amplifyapp.com/)__
 
