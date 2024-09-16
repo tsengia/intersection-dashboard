@@ -234,8 +234,8 @@ class DashboardComponent extends React.Component {
                 </div>
 
                 <div class="tutorial-blurb" >
-                    This webapp uses Web Sockets to show real time changes. <br />
-                    Open this website on another device to see it in action!<br />
+                    This webapp uses Web Sockets to show real time changes.<br />
+                    Open it on another device to see it in action!<br />
                 </div>
     
                 <div className="traffic-light-control-group" >
