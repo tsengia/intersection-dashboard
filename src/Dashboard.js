@@ -229,9 +229,6 @@ class DashboardComponent extends React.Component {
 
         return (
             <div className="dashboard-container" >
-                <div id="top-bar" >
-                    Traffic Intersection Dashboard
-                </div>
 
                 <div class="tutorial-blurb" >
                     This webapp uses Web Sockets to show real time changes.<br />
