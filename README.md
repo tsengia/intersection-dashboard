@@ -1,13 +1,18 @@
 # Traffic Light Dashboard
-<img align="left" alt="Illustration of a traffic light with red, yellow, and green lights" src="public/logo192.png" />  
-This is a simple React JS single page application (SPA) for controlling virtual Traffic Intersections.  
-The backend is powered by AWS AppSync and DynamoDB.  
+<img align="left" width="192" height="192" alt="Illustration of a traffic light with red, yellow, and green lights" src="public/logo192.png" >  
+This is a simple React JS single page application (SPA) for controlling virtual Traffic Intersections.    
+The backend is powered by AWS AppSync and DynamoDB.   
 
 This frontend app was originally built for a [previous IoT project of mine](https://github.com/tsengia/iot-thingy91-traffic-lights) and has now been refactored to use AWS AppSync instead of oneM2M.
 
-__[Try it out here!](https://main.d357xgwrfyl7b5.amplifyapp.com/)__
+__[Try it out here!](https://main.d357xgwrfyl7b5.amplifyapp.com/)__  
 
----
+---  
+  
+    
+
+
+
 
 ## Development
 Before developing, you will need to install the required node modules, run the following command to install them:
