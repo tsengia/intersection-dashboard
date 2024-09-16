@@ -138,6 +138,7 @@ class DashboardComponent extends React.Component {
             }
             else {
                 console.error("response.data.updateIntersection is null!");
+                this.setState({"status": "ERROR: response.data.updateIntersection is null!"});
             }
         }).catch((error) => {
             console.error(error);
@@ -164,6 +165,7 @@ class DashboardComponent extends React.Component {
             }
             else {
                 console.error("response.data.deleteIntersection is null!");
+                this.setState({"status": "ERROR: response.data.deleteIntersection is null!"});
             }
         }).catch((error) => {
             console.error(error);
