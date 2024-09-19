@@ -24,3 +24,7 @@ yarn-error.log*
 
 *.csv
 .env
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
