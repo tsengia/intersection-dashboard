@@ -18,8 +18,8 @@ class CdkStack extends Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const api = new appsync.GraphqlApi(this, "IntersectionAPI", {
-      name: "IntersectionAPI",
+    const api = new appsync.GraphqlApi(this, "IntersectionAPI-CDK", {
+      name: "IntersectionAPI-CDK",
       definition: appsync.Definition.fromFile(path.join(__dirname, 'schema.graphql')),
       authorizationConfig: {
         defaultAuthorization: {
@@ -60,7 +60,16 @@ class CdkStack extends Stack {
           fieldName: fieldName,
           typeName: typeName,
           pipelineConfig: [f],
-          code: appsync.Code.fromAsset(path.join(__dirname, "resolvers/pipeline_resolver.js"))
+          runtime: appsync.FunctionRuntime.JS_1_0_0,
+          code: appsync.Code.fromInline(`
+              export function request(ctx) {
+                  return {};
+              }
+
+              export function response(ctx) {
+                  return ctx.prev.result;
+              }
+            `)
         });
     }
 
