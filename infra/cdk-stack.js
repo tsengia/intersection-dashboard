@@ -1,4 +1,12 @@
-import { Stack, Duration } from "aws-cdk-lib";
+import { Stack } from 'aws-cdk-lib';
+import * as appsync from 'aws-cdk-lib/aws-appsync';
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as path from 'path';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 class CdkStack extends Stack {
   /**
@@ -10,12 +18,53 @@ class CdkStack extends Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    const api = new appsync.GraphqlApi(this, "IntersectionAPI", {
+      name: "IntersectionAPI",
+      definition: appsync.Definition.fromFile(path.join(__dirname, 'schema.graphql')),
+      authorizationConfig: {
+        defaultAuthorization: {
+          authorizationType: appsync.AuthorizationType.API_KEY
+        }
+      },
+      xrayEnabled: true
+    });
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'CdkQueue', {
-    //   visibilityTimeout: Duration.seconds(300)
-    // });
+    const table = new dynamodb.Table(this, "IntersectionTable", {
+      partitionKey: { name: "name", type: dynamodb.AttributeType.STRING }
+    });
+
+    const dataSource = api.addDynamoDbDataSource("dynamoDataSource", table);
+
+    const functionList = [
+      ["LIST_INTERSECTIONS","Query","intersectionList","list_intersections.js"],
+      ["GET_INTERSECTION","Query","intersection","get_intersection.js"],
+      ["ADD_INTERSECTION","Mutation","addIntersection","add_intersection.js"],
+      ["UPDATE_INTERSECTION","Mutation","updateIntersection","update_intersection.js"],
+      ["REMOVE_INTERSECTION","Mutation","removeIntersection","remove_intersection.js"]
+    ];
+
+    for (const [name, typeName, fieldName, filename] of functionList) {
+
+        const f = new appsync.AppsyncFunction(this, name, {
+          name: name,
+          typeName: typeName,
+          fieldName: fieldName,
+          api,
+          dataSource: dataSource,
+          runtime: appsync.FunctionRuntime.JS_1_0_0,
+          code: appsync.Code.fromAsset(path.join(__dirname, "resolvers/", filename))
+        });
+
+        new appsync.Resolver(this, name + "_RESOLVER", {
+          api: api,
+          fieldName: fieldName,
+          typeName: typeName,
+          pipelineConfig: [f],
+          code: appsync.Code.fromAsset(path.join(__dirname, "resolvers/pipeline_resolver.js"))
+        });
+    }
+
+
   }
 }
 
