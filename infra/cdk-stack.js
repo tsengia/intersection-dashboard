@@ -1,4 +1,4 @@
-import { Stack } from 'aws-cdk-lib';
+import { RemovalPolicy, Stack } from 'aws-cdk-lib';
 import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as path from 'path';
@@ -29,8 +29,10 @@ class CdkStack extends Stack {
       xrayEnabled: true
     });
 
-    const table = new dynamodb.Table(this, "IntersectionTable", {
-      partitionKey: { name: "name", type: dynamodb.AttributeType.STRING }
+    const table = new dynamodb.TableV2(this, "IntersectionTable-CDK", {
+      partitionKey: { name: "name", type: dynamodb.AttributeType.STRING },
+      billing: dynamodb.Billing.onDemand(),
+      removalPolicy: RemovalPolicy.DESTROY
     });
 
     const dataSource = api.addDynamoDbDataSource("dynamoDataSource", table);
