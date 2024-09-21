@@ -19,18 +19,6 @@ class CdkStack extends Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const amplifyAppId = props.amplifyAppId;
-    const amplifyBranchName = props.amplifyBranchName;
-
-    if (amplifyAppId === undefined) {
-      throw new Error("CdkStack.amplifyAppId cannot be undefined! Please pass in the App ID to the stack props!");
-    }
-    
-    if (amplifyBranchName === undefined) {
-      throw new Error("CdkStack.amplifyBranchName cannot be undefined! Please pass in the App ID to the stack props!");
-    }
-    
-
     const api = new appsync.GraphqlApi(this, "IntersectionAPI-CDK", {
       name: "IntersectionAPI-CDK",
       definition: appsync.Definition.fromFile(path.join(__dirname, 'schema.graphql')),
@@ -40,15 +28,6 @@ class CdkStack extends Stack {
         }
       },
       xrayEnabled: true
-    });
-
-    // In some cases, it would be best to store keys in AWS Secrets Manager.
-    // However, this is just a silly demo application and I don't feel like paying $0.40/month for it.
-    const apiKeySecret = new ssm.StringParameter(this, "IntersectionApiKey", {
-      stringValue: api.apiKey,
-      description: "AppSync API key for the Traffic Intersections API.",
-      parameterName: `/amplify/${amplifyAppId}/${amplifyBranchName}/APP_SYNC_API_KEY`,
-      tier: ssm.ParameterTier.STANDARD
     });
 
     const table = new dynamodb.TableV2(this, "IntersectionTable-CDK", {

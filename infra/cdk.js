@@ -10,6 +10,5 @@ import { simpleGit } from 'simple-git';
 const app = new App();
 let amplifyBranchName = await simpleGit().revparse(['--abbrev-ref', 'HEAD']);
 new CdkStack(app, 'CdkStack', {
-    amplifyAppId: process.env.AMPLIFY_APP_ID,
-    amplifyBranchName: amplifyBranchName
+    branchName: amplifyBranchName
 });
