@@ -1,7 +1,6 @@
 import { RemovalPolicy, Stack } from 'aws-cdk-lib';
 import * as appsync from 'aws-cdk-lib/aws-appsync';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
-import * as ssm from 'aws-cdk-lib/aws-ssm';
 import * as path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
