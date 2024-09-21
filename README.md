@@ -26,8 +26,11 @@ You can copy/move these files into your `/var/www/html` directory to serve them 
 
 ## CDK Deployment
 
-Make sure that you have [bootstrapped](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html) your target environment before running the below command:
+If you have [bootstrapped](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html) your target environment with a different `qualifier`, then update the `@aws-cdk/core:bootstrapQualifier` context value in `cdk.json`.
 
+If you did not bootstrap with as custom qualifier, then remove the `@aws-cdk/core:bootstrapQualifier` context value in `cdk.json` so that the stacks are deployed with the default qualifier.
+
+Once you have the correct qualifier set, run the below command:
 ```bash
 cdk deploy
 ```
