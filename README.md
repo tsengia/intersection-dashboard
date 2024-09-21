@@ -15,7 +15,7 @@ npm ci
 ```
 
 To launch the development server, run the following command from this directory: 
-```
+```bash
 npm start
 ```
 
@@ -26,23 +26,9 @@ You can copy/move these files into your `/var/www/html` directory to serve them 
 
 ## CDK Deployment
 
-Make sure that you have bootstrapped your target environment before following the steps below.
+Make sure that you have [bootstrapped](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html) your target environment before running the below command:
 
-Powershell:
-```powershell
-# First, set the AMPLIFY_APP_ID
-$Env:AMPLIFY_APP_ID='**************'
-
-# Next, deploy the application to your environment
-cdk deploy
-```
-
-Linux/Bash:
 ```bash
-# First, set the AMPLIFY_APP_ID
-export AMPLIFY_APP_ID='**************'
-
-# Next, deploy the application to your environment
 cdk deploy
 ```
 
