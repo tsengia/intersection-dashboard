@@ -1,6 +1,6 @@
 import React from 'react';
 
-var classNames = require('classnames');
+import * as classNames from 'classnames';
 
 class TrafficLightButton extends React.Component {
 
