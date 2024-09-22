@@ -6,7 +6,7 @@ export function request(ctx) {
     const name = ctx.arguments.name.trim();
     
     const defaults = {
-        "ble_state":"disconnected",
+        "ble_state":"connected",
         "light1":"red",
         "light2":"red"
     };
